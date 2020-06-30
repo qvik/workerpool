@@ -15,10 +15,10 @@ func TestConcurrency(t *testing.T) {
 
 	var rwlock sync.RWMutex
 
-	p := NewWorkerPool(concurrency, 100)
+	p := NewWorkerPool(concurrency, 100, numTasks)
 
 	for i := 0; i < numTasks; i++ {
-		p.AddTask(func() {
+		p.AddTask(func() error {
 			rwlock.Lock()
 			invocations++
 			perceivedConcurrency++
@@ -33,7 +33,18 @@ func TestConcurrency(t *testing.T) {
 			rwlock.Lock()
 			perceivedConcurrency--
 			rwlock.Unlock()
+
+			return nil
 		})
+	}
+
+	// Read all results
+	for i := 0; i < numTasks; i++ {
+		res := <-p.GetResultsChannel()
+
+		if res.Error != nil {
+			t.Errorf("task failed unexpectedly")
+		}
 	}
 
 	p.WaitAll()

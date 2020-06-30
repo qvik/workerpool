@@ -37,7 +37,15 @@ func main() {
         // TODO: Do something else here
     })
 
-    // Wait till both tasks have completed
+	for i := 0; i < 2; i++ {
+		res := <-p.GetResultsChannel()
+
+		if res.Error != nil {
+			// TODO: Handle error
+		}
+	}
+
+	// Wait till both tasks have completed
     p.WaitAll()
 
     // Close down the worker pool
