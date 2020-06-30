@@ -1,6 +1,6 @@
 # WorkerPool
 
-[![GoDoc](https://godoc.org/github.com/qvik/qvik-go-workerpool?status.svg)](https://godoc.org/github.com/qvik/qvik-go-workerpool)
+[![GoDoc](https://godoc.org/github.com/qvik/workerpool?status.svg)](https://godoc.org/github.com/qvik/workerpool)
 
 This is a worker pool implementation in Go language.
 
@@ -11,7 +11,7 @@ It provides a configurable concurrent task queue and a simple API.
 To install the library, run:
 
 ```sh
-go get -u https://github.com/qvik/qvik-go-workerpool
+go get -u https://github.com/qvik/workerpool
 ```
 
 ## Usage
