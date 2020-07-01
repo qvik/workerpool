@@ -56,12 +56,15 @@ func main() {
         // TODO: Do something else here
     })
 
+    // Make this goroutine wait for the pool task completion
+    p.WaitAll()
+
     // Close down the worker pool
     p.Close()
 }
 ```
 
-If you don't care about the results, you may simply call `p.WaitAll()` after all the tasks have been started to wait for their completion.
+If you don't care about the results, you may simply call `p.WaitAll()` after all the tasks have been started to wait for their completion. In this case, specify 0 as the size for the resultsSize parameter for the pool constructor.
 
 ## License
 
