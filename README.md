@@ -22,36 +22,46 @@ Here's an example of how to use the library:
 package main
 
 import (
+    "log"
     "github.com/qvik/workerpool"
 )
 
 func main() {
     // Create a WorkerPool with specified concurrency and queue size
-    p := workerpool.NewWorkerPool(2, 2)
+    p := workerpool.NewWorkerPool(2, 2, 2)
 
+    // It's a good strategy to process the results in a separate goroutine
+    // instead of the goroutine that starts the tasks; this way the results
+    // get consumed as soon as they become available and a possible
+    // deadlock can be avoided.
+    go func() {
+        for i := 0; i < 2; i++ {
+            res := <-p.GetResultsChannel()
+
+            if res.Error != nil {
+                // TODO: Handle error
+            }
+        }
+
+        log.Printf("both tasks have completed")
+    }()
+
+    // Launch task 1
     p.AddTask(func() {
         // TODO: Do something here
     })
 
+    // Launch task 2
     p.AddTask(func() {
         // TODO: Do something else here
     })
-
-	for i := 0; i < 2; i++ {
-		res := <-p.GetResultsChannel()
-
-		if res.Error != nil {
-			// TODO: Handle error
-		}
-	}
-
-	// Wait till both tasks have completed
-    p.WaitAll()
 
     // Close down the worker pool
     p.Close()
 }
 ```
+
+If you don't care about the results, you may simply call `p.WaitAll()` after all the tasks have been started to wait for their completion.
 
 ## License
 
