@@ -1,0 +1,21 @@
+image: golang:1.13
+
+stages:
+  - build
+  - test
+
+before_script:
+  - mkdir -p /go/src/github.com/qvik/workerpool $GOPATH/src/_/builds
+  - cp -r $CI_PROJECT_DIR/* $GOPATH/src/github.com/qvik/workerpool
+  - cd $GOPATH/src/github.com/qvik/workerpool
+  - go get -u
+
+build-app:
+  stage: build
+  script:
+    - go build
+
+unit_tests:
+  stage: test
+  script:
+    - go test -v
