@@ -25,12 +25,13 @@ type WorkerPool struct {
 	idSequence  uint64
 }
 
-// GetResultsChannel returns the Results channel. Consume this channel
-// until it is closed to get all the results for your tasks.
+// GetResultsChannel returns the Results channel. For every (finite) task
+// added via AddTask() there will be a result through this channel.
 func (p *WorkerPool) GetResultsChannel() chan (*Result) {
 	return p.resultCh
 }
 
+// work executes tasks from the queue until the queue gets closed.
 func (p *WorkerPool) work() {
 	for t := range p.taskQueueCh {
 		err := t.f()
